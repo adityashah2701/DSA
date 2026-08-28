@@ -1,21 +1,20 @@
 class Solution {
+    public int helper(int i, int[] nums, int t, int sum,Integer[][] dp) {
+        if (t == sum && i > nums.length-1)
+            return 1;
+        if (i >= nums.length)
+            return 0;
+        if(dp[i][sum+2000] != null) 
+            return dp[i][sum+2000];
+
+        int a = helper(i + 1, nums, t, sum + nums[i],dp);
+        int s = helper(i + 1, nums, t, sum - nums[i],dp);
+
+        return dp[i][sum+2000] = a + s;
+    }
+
     public int findTargetSumWays(int[] nums, int target) {
-        Map<Integer, Integer> counter = new HashMap<>();
-        counter.put(0, 1);
-
-        for (int n : nums) {
-            Map<Integer, Integer> temp = new HashMap<>();
-
-            for (Map.Entry<Integer, Integer> entry : counter.entrySet()) {
-                int total = entry.getKey();
-                int count = entry.getValue();
-
-                temp.put(total + n, temp.getOrDefault(total + n, 0) + count);
-                temp.put(total - n, temp.getOrDefault(total - n, 0) + count);
-            }
-            counter = temp;
-        }
-
-        return counter.getOrDefault(target, 0);        
+        Integer[][] dp = new Integer[nums.length][4001];
+        return helper(0, nums, target, 0, dp);
     }
 }
