@@ -15,7 +15,16 @@ class Solution {
 
     public int maxProfit(int[] prices) {
         int n = prices.length;
-        Integer[][] dp = new Integer[n][2];
-        return helper(0,1,prices,n,dp);
+        int aheadBuy = 0, aheadNotBuy = 0, curBuy = 0, curNotBuy = 0;
+
+        for(int i = n-1; i >= 0; i--) {
+            curBuy = Math.max(-prices[i] + aheadNotBuy, aheadBuy);
+            curNotBuy = Math.max(prices[i] + aheadBuy,aheadNotBuy);
+
+            aheadBuy = curBuy;
+            aheadNotBuy = curNotBuy;
+        }
+
+        return aheadBuy;
     }
 }
