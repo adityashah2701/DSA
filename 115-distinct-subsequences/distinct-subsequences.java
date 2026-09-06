@@ -1,4 +1,5 @@
 class Solution {
+    //TOP DOWN
     // public int helper(int i, int j, String s, String t, Integer[][] dp) {
     //     if (j < 0)
     //         return 1;
@@ -12,7 +13,7 @@ class Solution {
     //         return dp[i][j] = helper(i - 1, j, s, t, dp);
     //     }
     // }
-
+    //BOTTOM UP
     public int numDistinct(String s, String t) {
         int n = s.length();
         int m = t.length();
