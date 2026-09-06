@@ -1,5 +1,5 @@
 class Solution {
-
+    //TOP DOWN
     public int helper(int i, int buy, int[] prices, int n, Integer[][] dp) {
 
         if (i >= n)
@@ -23,22 +23,32 @@ class Solution {
         return dp[i][buy] = profit;
     }
 
-    public int maxProfit(int[] prices) {
-        int n = prices.length;
-        int[][] dp = new int[n + 2][2];
+    //BOTTOM UP
+  public int maxProfit(int[] prices) {
+    int n = prices.length;
 
-        for (int i = n - 1; i >= 0; i--) {
+    int[] f1 = new int[2]; // dp[i + 1]
+    int[] f2 = new int[2]; // dp[i + 2]
+    int[] c = new int[2];  // dp[i]
 
-            dp[i][1] = Math.max(
-                    -prices[i] + dp[i + 1][0],
-                    dp[i + 1][1]);
+    for (int i = n - 1; i >= 0; i--) {
 
-            dp[i][0] = Math.max(
-                    prices[i] + dp[i + 2][1],
-                    dp[i + 1][0]);
+        c[1] = Math.max(
+                -prices[i] + f1[0],
+                f1[1]
+        );
 
-        }
+        c[0] = Math.max(
+                prices[i] + f2[1],
+                f1[0]
+        );
 
-        return dp[0][1];
+        int[] temp = f2;
+        f2 = f1;
+        f1 = c;
+        c = temp;
     }
+
+    return f1[1];
+}
 }
