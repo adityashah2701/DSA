@@ -1,25 +1,26 @@
 class Solution {
-    Integer[][] dp;
-
     public int minCost(int n, int[] cuts) {
-        dp = new Integer[cuts.length][cuts.length];
+        int m = cuts.length;
         Arrays.sort(cuts);
-        return minC(0, cuts.length - 1, 0, n, cuts);
-    }
-
-    private int minC(int i, int j, int start, int end, int[] cuts) {
-        if (i > j) {
-            return 0;
+        int[] a = new int[m + 2];
+        a[0] = 0;
+        a[m + 1] = n;
+        for (int i = 0; i < m; i++) {
+            a[i + 1] = cuts[i];
         }
-        if (dp[i][j] != null) {
-            return dp[i][j];
+        int[][] dp = new int[m + 2][m + 2];
+        for (int i = m; i >= 1; i--) {
+            for (int j = i; j <= m; j++) {
+                int min = Integer.MAX_VALUE;
+                for (int k = i; k <= j; k++) {
+                    int cost = a[j + 1] - a[i - 1]
+                             + dp[i][k - 1]
+                             + dp[k + 1][j];
+                    min = Math.min(min, cost);
+                }
+                dp[i][j] = min;
+            }
         }
-        int min = Integer.MAX_VALUE;
-        int len = end - start;
-        for (int k = i; k <= j; k++) {
-            min = Math.min(min, minC(i, k - 1, start, cuts[k], cuts) + minC(k + 1, j, cuts[k], end, cuts));
-        }
-        return dp[i][j] = min + len;
-
+        return dp[1][m];
     }
 }
