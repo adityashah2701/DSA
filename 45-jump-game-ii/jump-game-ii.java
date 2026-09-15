@@ -1,30 +1,18 @@
 class Solution {
-    public static int f(int i, int[] nums, int n, Integer[] dp) {
-        if (i >= n - 1)
-            return 0;
+    public int jump(int[] nums) {
+        int jumps = 0;
+        int end = 0;
+        int farthest = 0;
 
-        if (dp[i] != null)
-            return dp[i];
+        for (int i = 0; i < nums.length - 1; i++) {
+            farthest = Math.max(farthest, i + nums[i]);
 
-        int min = Integer.MAX_VALUE;
-
-        for (int idx = 1; idx <= nums[i]; idx++) {
-            if (i + idx < n) {
-                int jumps = f(i + idx, nums, n, dp);
-
-                if (jumps != Integer.MAX_VALUE) {
-                    min = Math.min(min, jumps + 1);
-                }
+            if (i == end) {
+                jumps++;
+                end = farthest;
             }
         }
 
-        return dp[i] = min;
-    }
-
-    public int jump(int[] nums) {
-        int n = nums.length;
-        Integer[] dp = new Integer[n];
-
-        return f(0, nums, n, dp);
+        return jumps;
     }
 }
