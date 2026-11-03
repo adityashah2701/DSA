@@ -27,9 +27,14 @@ class Solution {
         
     }
     public Node dfs(Node node) {
-        if(visited[node.val] != null) return visited[node.val];
+        if(visited[node.val] != null) 
+            return visited[node.val];
+
         visited[node.val] = new Node(node.val);
-        for(Node n: node.neighbors) visited[node.val].neighbors.add(dfs(n));
+
+        for(Node n: node.neighbors) 
+            visited[node.val].neighbors.add(dfs(n));
+            
         return visited[node.val];
     }
 }
