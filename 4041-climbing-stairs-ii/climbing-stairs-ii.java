@@ -22,25 +22,28 @@ class Solution {
     }
 
     public int climbStairs(int n, int[] costs) {
-        int[] dp = new int[n + 1];
+        int next1 = 0;
+        int next2 = 0;
+        int next3 = 0;
 
         for (int i = n - 1; i >= 0; i--) {
-            int one = Integer.MAX_VALUE;
+            int one = costs[i] + 1 + next1;
             int two = Integer.MAX_VALUE;
             int three = Integer.MAX_VALUE;
 
-            if (i + 1 <= n)
-                one = costs[i] + 1 + dp[i + 1];
-
             if (i + 2 <= n)
-                two = costs[i + 1] + 4 + dp[i + 2];
+                two = costs[i + 1] + 4 + next2;
 
             if (i + 3 <= n)
-                three = costs[i + 2] + 9 + dp[i + 3];
+                three = costs[i + 2] + 9 + next3;
 
-            dp[i] = Math.min(one, Math.min(two, three));
+            int curr = Math.min(one, Math.min(two, three));
+
+            next3 = next2;
+            next2 = next1;
+            next1 = curr;
         }
 
-        return dp[0];
+        return next1;
     }
 }
