@@ -1,10 +1,17 @@
 class Solution {
     public String digitSum(String s, int k) {
-         while (s.length() > k) {
-            StringBuilder next = new StringBuilder();
-            for (int i = 0; i < s.length(); i += k)
-                next.append(s.substring(i, Math.min(i + k, s.length())).chars().map(d -> d - '0').sum());  
-            s = next.toString();
+        
+        while(s.length() > k){
+            StringBuilder sb = new StringBuilder();
+            int sum = 0;
+            for(int i = 1; i <=s.length(); i++){
+                sum += s.charAt(i-1) - '0';
+                if(i % k == 0 || i == s.length()){
+                    sb.append(sum);
+                    sum=0;  
+                }
+            }
+            s = sb.toString();
         }
         return s;
     }
