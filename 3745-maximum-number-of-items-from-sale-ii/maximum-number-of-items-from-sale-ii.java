@@ -1,30 +1,50 @@
 class Solution {
-    record Item(int price, int factor) implements Comparable<Item> {
-        public int compareTo(Item other) {
-            return Integer.compare(price, other.price);
-        }
-    }
-
     public int maximumSaleItems(int[][] items, int budget) {
-        int n = items.length;
-        int cheapest = Arrays.stream(items).mapToInt(item -> item[1]).min().getAsInt();
-        int[] have = new int[n + 1], deals = new int[n + 1];  // have[f]: items with factor f
-        for (int[] item : items) have[item[0]]++;
-        Arrays.fill(deals, -1);  // counted when an item is reached
-
-        List<Item> worth = Arrays.stream(items).filter(item -> item[1] < 2 * cheapest)
-                .map(item -> new Item(item[1], item[0])).toList();
-        PriorityQueue<Item> heap = new PriorityQueue<>(worth);  // built in O(n)
-        int copies = 0;
-        while (!heap.isEmpty() && heap.peek().price <= budget) {  // the cheapest deal left is affordable
-            Item item = heap.poll();
-            if (deals[item.factor] < 0)  // from -1: the item itself is not a deal
-                for (int multiple = item.factor; multiple <= n; multiple += item.factor)
-                    deals[item.factor] += have[multiple];
-            int pairs = Math.min(deals[item.factor], budget / item.price);
-            copies += 2 * pairs;
-            budget -= pairs * item.price;
+        int n=items.length;
+        int count[]=new int[n+1];
+        long min=Long.MAX_VALUE;
+        for(int i=0;i<n;i++){
+            count[items[i][0]]++;
+            if(items[i][1]<min){
+                min=items[i][1];
+            }
         }
-        return copies + budget / cheapest;
+        int temp[]=new int[n+1];
+        for(int i=1;i<=n;i++){
+            if(count[i]>0){
+                int m=-1;
+                for(int j=i;j<=n;j+=i){
+                    m+=count[j];
+                }
+                temp[i]=m;
+            }
+        }
+        long[] deal=new long[n];
+        int dealcount=0;
+        long limit=min*2;
+        for(int i=0;i<n;i++){
+            int first=items[i][0];
+            int second=items[i][1];
+            if(second<limit){
+                int m=temp[first];
+                if(m>0){
+                    deal[dealcount++]=((long)second<<32)|(m&0xFFFFFFFFL);
+                }
+            }
+        }
+        Arrays.sort(deal,0,dealcount);
+        long total=0;
+        for(int i=0;i<dealcount;i++){
+            long deals=deal[i];
+            int m=(int)(deals>>>32);
+            int counts=(int)(deals & 0xFFFFFFFFL);
+            if(budget>=m){
+                long time=Math.min((long)counts,budget/m);
+                budget-=time*m;;
+                total+=2*time;
+            }
+        }
+        total+=budget/min;
+        return (int)total;
     }
 }
